@@ -1,8 +1,11 @@
 namespace API.DTOs.Overtimes;
 
-public record OvertimeDetailResponseDto(Guid Id,
-                                        DateTime Date,
-                                        string Reason,
-                                        int TotalHours,
-                                        string Status,
-                                        IEnumerable<OvertimeRequestResponseDto> Requests);
+public class OvertimeDetailResponseDto
+{
+    public Guid Id { get; init; }
+    public DateTime Date { get; init; }
+    public string Reason { get; init; }
+    public int TotalHours { get; init; }
+    public string Status { get; init; }
+    public IEnumerable<OvertimeRequestResponseDto> Requests { get; init; }
+}

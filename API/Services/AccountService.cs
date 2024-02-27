@@ -1,6 +1,5 @@
 using API.DTOs.AccountRoles;
 using API.DTOs.Accounts;
-using API.DTOs.Roles;
 using API.Models;
 using API.Repositories.Interfaces;
 using API.Services.Interfaces;
@@ -12,8 +11,8 @@ public class AccountService : IAccountService
 {
     private readonly IAccountRepository _accountRepository;
     private readonly IAccountRoleRepository _accountRoleRepository;
-    private readonly IRoleRepository _roleRepository;
     private readonly IMapper _mapper;
+    private readonly IRoleRepository _roleRepository;
 
     public AccountService(IAccountRepository accountRepository, IMapper mapper,
                           IAccountRoleRepository accountRoleRepository, IRoleRepository roleRepository)
@@ -29,23 +28,17 @@ public class AccountService : IAccountService
         try
         {
             var account = await _accountRepository.GetByIdAsync(addAccountRoleRequestDto.AccountId);
-        
-            if (account == null)
-            {
-                return 0; // Account not found
-            }
-            
+
+            if (account == null) return 0; // Account not found
+
             var role = await _roleRepository.GetByIdAsync(addAccountRoleRequestDto.RoleId);
-            
-            if (role == null)
-            {
-                return -1; // Account not found
-            }
+
+            if (role == null) return -1; // Account not found
 
             var accountRole = _mapper.Map<AccountRole>(addAccountRoleRequestDto);
-            
+
             await _accountRoleRepository.CreateAsync(accountRole);
-        
+
             return 1; // success
         }
         catch (Exception ex)
@@ -61,15 +54,14 @@ public class AccountService : IAccountService
     {
         try
         {
-            var accountRole = await _accountRoleRepository.GetDataByAccountIdAndRoleAsync(removeAccountRoleRequestDto.AccountId, removeAccountRoleRequestDto.RoleId);
-        
-            if (accountRole == null)
-            {
-                return 0; // Account or Role not found
-            }
-        
+            var accountRole =
+                await _accountRoleRepository.GetDataByAccountIdAndRoleAsync(removeAccountRoleRequestDto.AccountId,
+                                                                            removeAccountRoleRequestDto.RoleId);
+
+            if (accountRole == null) return 0; // Account or Role not found
+
             await _accountRoleRepository.DeleteAsync(accountRole);
-        
+
             return 1; // success
         }
         catch (Exception ex)
@@ -88,7 +80,7 @@ public class AccountService : IAccountService
             var data = await _accountRepository.GetAllAsync();
 
             var dataMap = _mapper.Map<IEnumerable<AccountResponseDto>>(data);
-            
+
             return dataMap; // success
         }
         catch (Exception ex)
@@ -106,11 +98,8 @@ public class AccountService : IAccountService
         {
             var account = await _accountRepository.GetByIdAsync(id);
 
-            if (account == null)
-            {
-                return null; // not found
-            }
-            
+            if (account == null) return null; // not found
+
             var dataMap = _mapper.Map<AccountResponseDto>(account);
 
             return dataMap; // success
@@ -149,10 +138,7 @@ public class AccountService : IAccountService
         {
             var data = await _accountRepository.GetByIdAsync(id);
 
-            if (data == null)
-            {
-                return 0; // not found
-            }
+            if (data == null) return 0; // not found
 
             var account = _mapper.Map<Account>(accountRequestDto);
 
@@ -176,10 +162,7 @@ public class AccountService : IAccountService
         {
             var data = await _accountRepository.GetByIdAsync(id);
 
-            if (data == null)
-            {
-                return 0; // not found
-            }
+            if (data == null) return 0; // not found
 
             await _accountRepository.DeleteAsync(data);
 

@@ -1,7 +1,6 @@
 using System.Net;
 using API.DTOs.AccountRoles;
 using API.DTOs.Accounts;
-using API.DTOs.Employees;
 using API.Services.Interfaces;
 using API.Utilities.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +12,7 @@ namespace API.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly IAccountService _accountService;
-    
+
     public AccountController(IAccountService accountService)
     {
         _accountService = accountService;
@@ -25,42 +24,36 @@ public class AccountController : ControllerBase
         var result = await _accountService.RemoveRoleAsync(removeAccountRoleRequestDto);
 
         if (result == 0)
-        {
             return NotFound(new MessageResponseVM(StatusCodes.Status404NotFound,
                                                   HttpStatusCode.NotFound.ToString(),
                                                   "Id Employee Not Found"
                                                  )); // Data Not Found
-        }
-        
+
         return Ok(new MessageResponseVM(StatusCodes.Status200OK,
                                         HttpStatusCode.OK.ToString(),
-                                        "Employee Deleted" ));
+                                        "Employee Deleted"));
     }
-    
+
     [HttpPost("add-role")]
     public async Task<IActionResult> AddRoleAsync(AddAccountRoleRequestDto addAccountRoleRequestDto)
     {
         var result = await _accountService.AddAccountRoleAsync(addAccountRoleRequestDto);
 
         if (result == 0)
-        {
             return NotFound(new MessageResponseVM(StatusCodes.Status404NotFound,
                                                   HttpStatusCode.NotFound.ToString(),
                                                   "Account Id Not Found"
                                                  )); // Data Not Found
-        }
-        
+
         if (result == -1)
-        {
             return NotFound(new MessageResponseVM(StatusCodes.Status404NotFound,
                                                   HttpStatusCode.NotFound.ToString(),
                                                   "Role Id Not Found"
                                                  )); // Data Not Found
-        }
-        
+
         return Ok(new MessageResponseVM(StatusCodes.Status200OK,
                                         HttpStatusCode.OK.ToString(),
-                                        "Role Added" ));
+                                        "Role Added"));
     }
 
     [HttpGet]
@@ -69,34 +62,30 @@ public class AccountController : ControllerBase
         var results = await _accountService.GetAllAsync();
 
         if (!results.Any())
-        {
             return NotFound(new MessageResponseVM(StatusCodes.Status404NotFound,
                                                   HttpStatusCode.NotFound.ToString(),
                                                   "Data Account Not Found")); // Data Not Found
-        }
 
         return Ok(new ListResponseVM<AccountResponseDto>(StatusCodes.Status200OK,
-                                               HttpStatusCode.OK.ToString(),
-                                               "Data Account Found",
-                                               results.ToList()));
+                                                         HttpStatusCode.OK.ToString(),
+                                                         "Data Account Found",
+                                                         results.ToList()));
     }
-    
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetByIdAsync(Guid id)
     {
         var result = await _accountService.GetByIdAsync(id);
 
         if (result is null)
-        {
             return NotFound(new MessageResponseVM(StatusCodes.Status404NotFound,
                                                   HttpStatusCode.NotFound.ToString(),
                                                   "Id Account Not Found")); // Data Not Found
-        }
 
         return Ok(new SingleResponseVM<AccountResponseDto>(StatusCodes.Status200OK,
-                                               HttpStatusCode.OK.ToString(),
-                                               "Data Account Found",
-                                               result));
+                                                           HttpStatusCode.OK.ToString(),
+                                                           "Data Account Found",
+                                                           result));
     }
 
     [HttpPost]
@@ -106,42 +95,38 @@ public class AccountController : ControllerBase
 
         return Ok(new MessageResponseVM(StatusCodes.Status200OK,
                                         HttpStatusCode.OK.ToString(),
-                                        "Account Created" ));
+                                        "Account Created"));
     }
-    
+
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateAsync(Guid id, AccountRequestDto accountRequestDto)
     {
         var result = await _accountService.UpdateAsync(id, accountRequestDto);
 
         if (result == 0)
-        {
             return NotFound(new MessageResponseVM(StatusCodes.Status404NotFound,
                                                   HttpStatusCode.NotFound.ToString(),
                                                   "Id Account Not Found"
                                                  )); // Data Not Found
-        }
-        
+
         return Ok(new MessageResponseVM(StatusCodes.Status200OK,
                                         HttpStatusCode.OK.ToString(),
-                                        "Account Updated" ));
+                                        "Account Updated"));
     }
-    
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {
         var result = await _accountService.DeleteAsync(id);
 
         if (result == 0)
-        {
             return NotFound(new MessageResponseVM(StatusCodes.Status404NotFound,
                                                   HttpStatusCode.NotFound.ToString(),
                                                   "Id Account Not Found"
                                                  )); // Data Not Found
-        }
-        
+
         return Ok(new MessageResponseVM(StatusCodes.Status200OK,
                                         HttpStatusCode.OK.ToString(),
-                                        "Account Deleted" ));
+                                        "Account Deleted"));
     }
 }

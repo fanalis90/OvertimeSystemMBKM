@@ -2,6 +2,4 @@ using API.Models;
 
 namespace API.Repositories.Interfaces;
 
-public interface IAccountRepository : IRepository<Account>
-{
-}
+public interface IAccountRepository : IRepository<Account> { }

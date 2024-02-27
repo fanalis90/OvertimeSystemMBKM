@@ -1,5 +1,6 @@
 namespace API.DTOs.Accounts;
 
-public record AccountRequestDto(Guid Id,
-                                string Password,
-                                bool IsActive);
+public record AccountRequestDto(
+    Guid Id,
+    string Password,
+    bool IsActive);

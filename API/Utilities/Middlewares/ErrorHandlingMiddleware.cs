@@ -21,7 +21,7 @@ public class ErrorHandlingMiddleware : IMiddleware
                                                                 HttpStatusCode.InternalServerError.ToString(),
                                                                 "Internal server error occurred. Please contact the administrator for more information.",
                                                                 ex.InnerException?.Message ?? ex.Message);
-            
+
             var serializedErrorResponse = JsonSerializer.Serialize(customErrorResponse);
             await context.Response.WriteAsync(serializedErrorResponse);
         }

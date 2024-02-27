@@ -7,7 +7,7 @@ namespace API.Services;
 public class OvertimeRequestService : IOvertimeRequestService
 {
     private readonly IOvertimeRequestRepository _overtimeRequestRepository;
-    
+
     public OvertimeRequestService(IOvertimeRequestRepository overtimeRequestRepository)
     {
         _overtimeRequestRepository = overtimeRequestRepository;
@@ -23,7 +23,7 @@ public class OvertimeRequestService : IOvertimeRequestService
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.InnerException?.Message ?? ex.Message, 
+            Console.WriteLine(ex.InnerException?.Message ?? ex.Message,
                               Console.ForegroundColor = ConsoleColor.Red);
 
             throw; // error
@@ -40,7 +40,7 @@ public class OvertimeRequestService : IOvertimeRequestService
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.InnerException?.Message ?? ex.Message, 
+            Console.WriteLine(ex.InnerException?.Message ?? ex.Message,
                               Console.ForegroundColor = ConsoleColor.Red);
 
             throw; // error
@@ -57,11 +57,11 @@ public class OvertimeRequestService : IOvertimeRequestService
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.InnerException?.Message ?? ex.Message, 
+            Console.WriteLine(ex.InnerException?.Message ?? ex.Message,
                               Console.ForegroundColor = ConsoleColor.Red);
 
             throw; // error
-        }    
+        }
     }
 
     public async Task<int> UpdateAsync(Guid id, OvertimeRequest overtimeRequest)
@@ -69,12 +69,9 @@ public class OvertimeRequestService : IOvertimeRequestService
         try
         {
             var data = await _overtimeRequestRepository.GetByIdAsync(id);
-            
-            if (data == null)
-            {
-                return 0; // not found
-            }
-            
+
+            if (data == null) return 0; // not found
+
             overtimeRequest.Id = id;
             await _overtimeRequestRepository.UpdateAsync(overtimeRequest);
 
@@ -82,7 +79,7 @@ public class OvertimeRequestService : IOvertimeRequestService
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.InnerException?.Message ?? ex.Message, 
+            Console.WriteLine(ex.InnerException?.Message ?? ex.Message,
                               Console.ForegroundColor = ConsoleColor.Red);
 
             throw; // error
@@ -94,19 +91,16 @@ public class OvertimeRequestService : IOvertimeRequestService
         try
         {
             var data = await _overtimeRequestRepository.GetByIdAsync(id);
-            
-            if (data == null)
-            {
-                return 0; // not found
-            }
-            
+
+            if (data == null) return 0; // not found
+
             await _overtimeRequestRepository.DeleteAsync(data);
 
             return 1; // success
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.InnerException?.Message ?? ex.Message, 
+            Console.WriteLine(ex.InnerException?.Message ?? ex.Message,
                               Console.ForegroundColor = ConsoleColor.Red);
 
             throw; // error

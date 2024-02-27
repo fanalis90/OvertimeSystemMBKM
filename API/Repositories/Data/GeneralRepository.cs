@@ -7,7 +7,7 @@ namespace API.Repositories.Data;
 public class GeneralRepository<TEntity> : IRepository<TEntity> where TEntity : class
 {
     protected readonly OvertimeSystemDbContext _context;
-    
+
     public GeneralRepository(OvertimeSystemDbContext context)
     {
         _context = context;

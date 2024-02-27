@@ -7,7 +7,7 @@ namespace API.Repositories.Data;
 public class AccountRoleRepository : GeneralRepository<AccountRole>, IAccountRoleRepository
 {
     public AccountRoleRepository(OvertimeSystemDbContext context) : base(context) { }
-    
+
     public async Task<AccountRole?> GetDataByAccountIdAndRoleAsync(Guid accountId, Guid roleId)
     {
         var getByAccountId = await GetByAccountIdAsync(accountId);

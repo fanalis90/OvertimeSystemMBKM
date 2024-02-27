@@ -22,17 +22,17 @@ public class OvertimeSystemDbContext : DbContext
                     .HasMany(a => a.AccountRoles)
                     .WithOne(ar => ar.Account)
                     .HasForeignKey(ar => ar.AccountId);
-        
+
         modelBuilder.Entity<Account>()
                     .HasMany(a => a.OvertimeRequests)
                     .WithOne(or => or.Account)
                     .HasForeignKey(or => or.AccountId);
-        
+
         modelBuilder.Entity<Account>()
                     .HasOne(a => a.Employee)
                     .WithOne(e => e.Account)
                     .HasForeignKey<Account>(a => a.Id);
-        
+
         modelBuilder.Entity<Role>()
                     .HasMany(r => r.AccountRoles)
                     .WithOne(ar => ar.Role)

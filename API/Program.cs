@@ -6,7 +6,6 @@ using API.Services;
 using API.Services.Interfaces;
 using API.Utilities.Middlewares;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +29,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAccountRoleService, AccountRoleService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IOvertimeService, OvertimeService>();
-builder.Services.AddScoped<IOvertimeRequestService, OvertimeRequestService>();  
+builder.Services.AddScoped<IOvertimeRequestService, OvertimeRequestService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 
 // Add custom middleware to the container

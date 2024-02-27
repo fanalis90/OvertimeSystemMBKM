@@ -80,10 +80,7 @@ public class AccountRoleService : IAccountRoleService
         {
             var data = await _accountRoleRepository.GetByIdAsync(id);
 
-            if (data == null)
-            {
-                return 0; // not found
-            }
+            if (data == null) return 0; // not found
 
             var accountRole = _mapper.Map<AccountRole>(addAccountRoleRequestDto);
 
@@ -107,10 +104,7 @@ public class AccountRoleService : IAccountRoleService
         {
             var data = await _accountRoleRepository.GetByIdAsync(id);
 
-            if (data == null)
-            {
-                return 0; // not found
-            }
+            if (data == null) return 0; // not found
 
             await _accountRoleRepository.DeleteAsync(data);
 

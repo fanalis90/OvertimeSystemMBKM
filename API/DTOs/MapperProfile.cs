@@ -1,4 +1,3 @@
-using System.Collections;
 using API.DTOs.AccountRoles;
 using API.DTOs.Accounts;
 using API.DTOs.Employees;
@@ -33,21 +32,33 @@ public class MapperProfile : Profile
         CreateMap<Account, AccountResponseDto>()
            .ForMember(dest => dest.Roles,
                       opt => opt.MapFrom(src => src.AccountRoles.Select(ar => ar.Role.Name)));
-        
+
         // For AccountRoles
         CreateMap<AddAccountRoleRequestDto, AccountRole>();
         CreateMap<RemoveAccountRoleRequestDto, AccountRole>();
         CreateMap<AccountRole, AccountRoleResponseDto>();
-        
+
         // For Roles
         CreateMap<RoleRequestDto, Role>();
         CreateMap<Role, RoleResponseDto>();
-        
+
         // For Overtimes and OverTimeRequests
         CreateMap<OvertimeRequestDto, Overtime>()
+           .ForMember(dest => dest.Id,
+                      opt => opt.MapFrom(src => Guid.NewGuid()))
            .ForMember(dest => dest.Status,
                       opt => opt.MapFrom(src => "Requested"));
-        CreateMap<OvertimeRequestDto, OvertimeRequest>();
-        
+        CreateMap<Overtime, OvertimeRequest>()
+           .ForMember(dest => dest.Comment, opt => opt.MapFrom(src => src.Reason))
+           .ForMember(dest => dest.OvertimeId, opt => opt.MapFrom(src => src.Id))
+           .ForMember(dest => dest.Timestamp, opt => opt.MapFrom(src => new DateTime()));
+        CreateMap<Overtime, OvertimeResponseDto>();
+        CreateMap<Overtime, OvertimeDetailResponseDto>()
+           .ForMember(dest => dest.Requests,
+                      opt => opt.MapFrom(src =>
+                                             src.OvertimeRequests.Select(or =>
+                                                                             new
+                                                                                 OvertimeRequestResponseDto(or.Timestamp,
+                                                                                  or.Status, or.Comment))));
     }
 }
