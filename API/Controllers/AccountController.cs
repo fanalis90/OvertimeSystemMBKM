@@ -4,6 +4,7 @@ using API.DTOs.Accounts;
 using API.Services.Interfaces;
 using API.Utilities.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Crypto.Operators;
 
 namespace API.Controllers;
 
@@ -17,6 +18,27 @@ public class AccountController : ControllerBase
     {
         _accountService = accountService;
     }
+
+    [HttpPost("register")]
+    public async Task<IActionResult> RegisterAsync(RegisterDto registerDto)
+    {
+        
+        var result = await _accountService.RegisterAsync(registerDto);
+        if(result == 0)
+        {
+            return NotFound(new MessageResponseVM(StatusCodes.Status404NotFound,
+                                                  HttpStatusCode.NotFound.ToString(),
+                                                  "Role Employee Not Found"
+                                                 ));
+        }
+
+        return Ok(new MessageResponseVM(StatusCodes.Status200OK,
+                                   HttpStatusCode.OK.ToString(),
+                                   "Account Created"));
+    }
+
+    [HttpPost("login")]
+
 
     [HttpDelete("remove-role")]
     public async Task<IActionResult> RemoveRoleAsync(RemoveAccountRoleRequestDto removeAccountRoleRequestDto)
@@ -128,5 +150,21 @@ public class AccountController : ControllerBase
         return Ok(new MessageResponseVM(StatusCodes.Status200OK,
                                         HttpStatusCode.OK.ToString(),
                                         "Account Deleted"));
+    }
+
+    [HttpPost("Forgot-Password")]
+    public async Task<IActionResult> ForgotPasswordAsync(ForgotPasswodDto forgotPasswodDto)
+    {
+        var result = await _accountService.ForgotPasswordAsync(forgotPasswodDto);
+        if (result == 0)
+        {
+            return NotFound(new MessageResponseVM(StatusCodes.Status404NotFound,
+                                                 HttpStatusCode.NotFound.ToString(),
+                                                 "Email Not Found"
+                                                )); // Data Not Found
+        }
+        return Ok(new MessageResponseVM(StatusCodes.Status200OK,
+                                        HttpStatusCode.OK.ToString(),
+                                        "OTP Send to your Email"));
     }
 }

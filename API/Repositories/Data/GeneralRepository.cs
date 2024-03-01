@@ -1,6 +1,7 @@
 using API.Data;
 using API.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace API.Repositories.Data;
 
@@ -41,5 +42,10 @@ public class GeneralRepository<TEntity> : IRepository<TEntity> where TEntity : c
     {
         _context.Set<TEntity>().Remove(entity);
         return _context.SaveChangesAsync();
+    }
+
+    public async Task<IDbContextTransaction> BeginTransactionAsync()
+    {
+        return await _context.Database.BeginTransactionAsync();
     }
 }

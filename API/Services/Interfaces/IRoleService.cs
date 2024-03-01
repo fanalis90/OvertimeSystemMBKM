@@ -9,4 +9,5 @@ public interface IRoleService
     Task<int> CreateAsync(RoleRequestDto roleRequestDto);
     Task<int> UpdateAsync(Guid id, RoleRequestDto roleRequestDto);
     Task<int> DeleteAsync(Guid id);
+   
 }

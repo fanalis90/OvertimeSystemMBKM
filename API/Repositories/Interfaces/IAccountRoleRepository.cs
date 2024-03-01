@@ -6,4 +6,5 @@ public interface IAccountRoleRepository : IRepository<AccountRole>
 {
     Task<AccountRole?> GetDataByAccountIdAndRoleAsync(Guid accountId, Guid roleId);
     Task<IEnumerable<AccountRole?>> GetByAccountIdAsync(Guid accountId);
+    
 }

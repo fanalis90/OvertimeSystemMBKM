@@ -1,0 +1,40 @@
+﻿using API.DTOs.Utilities;
+using API.Utilities.Handlers.Interfaces;
+using MailKit.Security;
+using MimeKit.Text;
+using MimeKit;
+using MailKit.Net.Smtp;
+
+namespace API.Utilities.Handlers
+{
+    public class EmailHandler : IEmailHandler
+    {
+        private readonly string _smtpServer;
+        private readonly int _smtpPort;
+        private readonly string _mailUsername;
+        private readonly string _mailPassword;
+        private readonly string _mailFrom;
+        public EmailHandler(string smtpServer, int smtpPort, string mailUsername, string mailPassword, string mailFrom)
+        {
+            _smtpServer = smtpServer;
+            _smtpPort = smtpPort;
+            _mailUsername = mailUsername;
+            _mailPassword = mailPassword;
+            _mailFrom = mailFrom;
+        }
+        public async Task SendEmailAsync(EmailDto emailDto)
+        {
+            var email = new MimeMessage();
+            email.From.Add(MailboxAddress.Parse(_mailFrom));
+            email.To.Add(MailboxAddress.Parse(emailDto.To));
+            email.Subject = emailDto.Subject;
+            email.Body = new TextPart(TextFormat.Html) { Text = emailDto.Body };
+
+            using var smtp = new SmtpClient();
+            await smtp.ConnectAsync(_smtpServer, _smtpPort, SecureSocketOptions.None);
+            //await smtp.AuthenticateAsync(_mailUsername, _mailPassword);
+            await smtp.SendAsync(email);
+            await smtp.DisconnectAsync(true);
+        }
+    }
+}

@@ -8,4 +8,4 @@ public record EmployeeRequestDto(
     string Email,
     string Position,
     string Department,
-    Guid ManagerId);
+    Guid? ManagerId);

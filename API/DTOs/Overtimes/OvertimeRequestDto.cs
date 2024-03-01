@@ -7,3 +7,4 @@ public class OvertimeRequestDto
     public string Reason { get; init; }
     public int TotalHours { get; init; }
 }
+

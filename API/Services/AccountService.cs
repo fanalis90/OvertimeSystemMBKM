@@ -1,9 +1,14 @@
 using API.DTOs.AccountRoles;
 using API.DTOs.Accounts;
+using API.DTOs.Utilities;
 using API.Models;
 using API.Repositories.Interfaces;
 using API.Services.Interfaces;
+using API.Utilities.Handlers;
+using API.Utilities.Handlers.Interfaces;
+using API.Utilities.ViewModels;
 using AutoMapper;
+using static System.Net.WebRequestMethods;
 
 namespace API.Services;
 
@@ -11,16 +16,20 @@ public class AccountService : IAccountService
 {
     private readonly IAccountRepository _accountRepository;
     private readonly IAccountRoleRepository _accountRoleRepository;
+    private readonly IEmployeeRepository _employeeRepository;
     private readonly IMapper _mapper;
     private readonly IRoleRepository _roleRepository;
+    private readonly IEmailHandler _emailHandler;
 
     public AccountService(IAccountRepository accountRepository, IMapper mapper,
-                          IAccountRoleRepository accountRoleRepository, IRoleRepository roleRepository)
+                          IAccountRoleRepository accountRoleRepository, IRoleRepository roleRepository, IEmployeeRepository employeeRepository, IEmailHandler emailHandler)
     {
         _accountRepository = accountRepository;
         _mapper = mapper;
         _accountRoleRepository = accountRoleRepository;
         _roleRepository = roleRepository;
+        _employeeRepository = employeeRepository;
+        _emailHandler = emailHandler;
     }
 
     public async Task<int> AddAccountRoleAsync(AddAccountRoleRequestDto addAccountRoleRequestDto)
@@ -175,5 +184,72 @@ public class AccountService : IAccountService
 
             throw; // error
         }
+    }
+
+    public async Task<int> RegisterAsync(RegisterDto registerDto)
+    {
+        await using var transaction = await _accountRepository.BeginTransactionAsync();
+        if (registerDto.Password != registerDto.ConfirmPassword)
+        {
+            return -1; //password not match
+        }
+        var employeeMap = _mapper.Map<Employee>(registerDto);
+        var employee = await _employeeRepository.CreateAsync(employeeMap);
+
+        var accountVM = new AccountVM(employee, registerDto);
+
+        var account = _mapper.Map<Account>(accountVM);
+
+        await _accountRepository.CreateAsync(account);
+
+        var role = await _roleRepository.GetIdByNameAsync("Employee");
+        if(role == null)
+        {
+            return 0; //role not found
+        }
+        var AccountRoleVM = new AccountRoleVM(account, role);
+        var accountRole = _mapper.Map<AccountRole>(AccountRoleVM);
+        await _accountRoleRepository.CreateAsync(accountRole);
+        await transaction.CommitAsync();
+
+        return 1; //success
+
+    }
+
+    public async Task<int> LoginAsync(LoginDto loginDto)
+    {
+        var employee = await _employeeRepository.GetByEmailAsync(loginDto.Email);
+        if(employee  == null) return 0; //email not match
+        
+        var account = await _accountRepository.GetByIdAsync(employee.Id);
+        if (account == null) return 0; //akun not found
+        var isValidPassword = BCryptHandler.VerifyPassword(loginDto.Password, account.Password);
+        if (!isValidPassword) return 0; //pasword not match
+
+        return 1;
+    }
+
+    public async Task<int> ChangePassword(ChangePasswordDto changePasswordDto)
+    {
+        return 1;
+    }
+
+    public async Task<int> ForgotPasswordAsync(ForgotPasswodDto forgotPasswodDto)
+    {
+        var employee = await _employeeRepository.GetByEmailAsync(forgotPasswodDto.Email);
+        if (employee == null) return 0; //email not match
+
+        var account = await _accountRepository.GetByIdAsync(employee.Id);
+        if (account == null) return 0; //akun not found
+
+        account.Otp = new Random().Next(100000, 1000000);
+        account.Expired = DateTime.Now.AddMinutes(5);
+        account.IsUsed = false;
+        await _accountRepository.UpdateAsync(account);
+        var message = $"Your OTP is {account.Otp}";
+
+        var emailMap = new EmailDto(forgotPasswodDto.Email, "[Reset Password] - MBKM 6", message);
+        await _emailHandler.SendEmailAsync(emailMap);
+        return 1;
     }
 }

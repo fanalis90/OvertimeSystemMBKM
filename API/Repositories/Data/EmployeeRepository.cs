@@ -9,6 +9,11 @@ public class EmployeeRepository : GeneralRepository<Employee>, IEmployeeReposito
 {
     public EmployeeRepository(OvertimeSystemDbContext context) : base(context) { }
 
+    public async Task<Employee?> GetByEmailAsync(string email)
+    {
+        return await _context.Set<Employee>().Where(e => e.Email == email).FirstOrDefaultAsync();
+    }
+
     public async Task<Employee?> GetByNikAsync(string nik)
     {
         return await _context.Set<Employee>().Where(e => e.Nik == nik).FirstOrDefaultAsync();

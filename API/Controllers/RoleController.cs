@@ -25,11 +25,11 @@ public class RoleController : ControllerBase
         if (!results.Any())
             return NotFound(new MessageResponseVM(StatusCodes.Status404NotFound,
                                                   HttpStatusCode.NotFound.ToString(),
-                                                  "Data Employee Not Found")); // Data Not Found
+                                                  "Data Role Not Found")); // Data Not Found
 
         return Ok(new ListResponseVM<RoleResponseDto>(StatusCodes.Status200OK,
                                                       HttpStatusCode.OK.ToString(),
-                                                      "Data Employee Found",
+                                                      "Data Role Found",
                                                       results.ToList()));
     }
 
@@ -41,11 +41,11 @@ public class RoleController : ControllerBase
         if (result is null)
             return NotFound(new MessageResponseVM(StatusCodes.Status404NotFound,
                                                   HttpStatusCode.NotFound.ToString(),
-                                                  "Id Employee Not Found")); // Data Not Found
+                                                  "Id Role Not Found")); // Data Not Found
 
         return Ok(new SingleResponseVM<RoleResponseDto>(StatusCodes.Status200OK,
                                                         HttpStatusCode.OK.ToString(),
-                                                        "Data Employee Found",
+                                                        "Data Role Found",
                                                         result));
     }
 
@@ -56,7 +56,7 @@ public class RoleController : ControllerBase
 
         return Ok(new MessageResponseVM(StatusCodes.Status200OK,
                                         HttpStatusCode.OK.ToString(),
-                                        "Employee Created"));
+                                        "Role Created"));
     }
 
     [HttpPut("{id}")]
@@ -67,12 +67,12 @@ public class RoleController : ControllerBase
         if (result == 0)
             return NotFound(new MessageResponseVM(StatusCodes.Status404NotFound,
                                                   HttpStatusCode.NotFound.ToString(),
-                                                  "Id Employee Not Found"
+                                                  "Id Role Not Found"
                                                  )); // Data Not Found
 
         return Ok(new MessageResponseVM(StatusCodes.Status200OK,
                                         HttpStatusCode.OK.ToString(),
-                                        "Employee Updated"));
+                                        "Role Updated"));
     }
 
     [HttpDelete("{id}")]
@@ -83,11 +83,11 @@ public class RoleController : ControllerBase
         if (result == 0)
             return NotFound(new MessageResponseVM(StatusCodes.Status404NotFound,
                                                   HttpStatusCode.NotFound.ToString(),
-                                                  "Id Employee Not Found"
+                                                  "Id Role Not Found"
                                                  )); // Data Not Found
 
         return Ok(new MessageResponseVM(StatusCodes.Status200OK,
                                         HttpStatusCode.OK.ToString(),
-                                        "Employee Deleted"));
+                                        "Role Deleted"));
     }
 }

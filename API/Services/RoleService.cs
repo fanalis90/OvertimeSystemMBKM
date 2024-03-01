@@ -36,6 +36,7 @@ public class RoleService : IRoleService
         }
     }
 
+
     public async Task<RoleResponseDto?> GetByIdAsync(Guid id)
     {
         try

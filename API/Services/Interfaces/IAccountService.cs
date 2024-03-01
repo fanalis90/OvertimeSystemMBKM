@@ -12,4 +12,8 @@ public interface IAccountService
     Task<int> CreateAsync(AccountRequestDto accountRequestDto);
     Task<int> UpdateAsync(Guid id, AccountRequestDto accountRequestDto);
     Task<int> DeleteAsync(Guid id);
+    Task<int> RegisterAsync(RegisterDto registerDto);
+    Task<int> LoginAsync(LoginDto loginDto);
+    Task<int> ChangePassword(ChangePasswordDto changePasswordDto);
+    Task<int> ForgotPasswordAsync(ForgotPasswodDto forgotPasswodDto);
 }
